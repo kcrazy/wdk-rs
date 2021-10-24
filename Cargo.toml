@@ -1,2 +1,8 @@
 [workspace]
 members=["examples/hello-world"]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
