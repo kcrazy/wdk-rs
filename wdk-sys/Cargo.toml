@@ -1,10 +1,17 @@
 [package]
-name = "wdk-build"
+name = "wdk-sys"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-thiserror = "1.0"
-winreg = "0.10"
+cty = "0.2"
+
+[build-dependencies]
+bindgen = "0.59"
+wdk-build = { path = "../wdk-build" }
+
+[features]
+default = ["ntoskrnl"]
+ntoskrnl = []

@@ -1,12 +1,8 @@
 #![no_std]
 
-use core::panic::PanicInfo;
-
-/// This function is called on panic.
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    loop {}
-}
+use wdk::println;
 
 #[no_mangle]
-extern "C" fn _DllMainCRTStartup() {}
+extern "C" fn _DllMainCRTStartup() {
+    println!("Hello World!");
+}

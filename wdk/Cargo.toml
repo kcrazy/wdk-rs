@@ -1,10 +1,13 @@
 [package]
-name = "wdk-build"
+name = "wdk"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["alloc"]
+alloc = []
+
 [dependencies]
-thiserror = "1.0"
-winreg = "0.10"
+wdk-sys = { path = "../wdk-sys" }

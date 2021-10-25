@@ -1,5 +1,5 @@
 [workspace]
-members = ["wdk-build", "examples"]
+members = ["wdk-build", "wdk-sys", "wdk", "examples"]
 
 [profile.dev]
 panic = "abort"
