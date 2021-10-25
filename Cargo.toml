@@ -1,5 +1,5 @@
 [workspace]
-members=["examples/hello-world"]
+members = ["wdk-build", "examples"]
 
 [profile.dev]
 panic = "abort"
