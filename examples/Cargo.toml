@@ -13,6 +13,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 wdk = { path = "../wdk" }
+wdk-sys = { path = "../wdk-sys" }
 
 [build-dependencies]
 wdk-build = { path = "../wdk-build" }
