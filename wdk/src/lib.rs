@@ -1,6 +1,6 @@
 #![no_std]
 
-pub mod allocator;
+pub mod alloc;
 pub mod dbg;
 pub mod error;
 pub mod version;

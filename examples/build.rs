@@ -1,4 +1,4 @@
-use wdk_build::{build};
+use wdk_build::build;
 
 fn main() {
     build().unwrap();
