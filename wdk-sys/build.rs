@@ -1,14 +1,9 @@
-use std::path::PathBuf;
-
 use wdk_build::{get_km_dir, DirectoryType};
 
 fn generate_base() {
     println!("cargo:rerun-if-changed=wrapper/wrapper.h");
 
     let include_dir = get_km_dir(DirectoryType::Include).unwrap();
-    let out_path = PathBuf::from(
-        std::env::var_os("OUT_DIR").expect("the environment variable OUT_DIR is undefined"),
-    );
 
     bindgen::Builder::default()
         .header("wrapper/wrapper.h")
@@ -22,7 +17,7 @@ fn generate_base() {
         .ignore_functions()
         .generate()
         .unwrap()
-        .write_to_file(out_path.join("base.rs"))
+        .write_to_file("src/bind/base.rs")
         .unwrap();
 }
 
@@ -33,11 +28,8 @@ fn generate_ntoskrnl() {
     println!("cargo:rustc-link-lib=ntoskrnl");
 
     let include_dir = get_km_dir(DirectoryType::Include).unwrap();
-    let out_path = PathBuf::from(
-        std::env::var_os("OUT_DIR").expect("the environment variable OUT_DIR is undefined"),
-    );
 
-    bindgen::Builder::default()
+    let buf = bindgen::Builder::default()
         .header("wrapper/wrapper.h")
         .use_core()
         .derive_debug(false)
@@ -51,8 +43,14 @@ fn generate_ntoskrnl() {
         .allowlist_recursively(false)
         .generate()
         .unwrap()
-        .write_to_file(out_path.join("ntoskrnl.rs"))
-        .unwrap();
+        .to_string();
+
+    let buf = r#"use crate::bind::base::*;
+
+"#
+    .to_string()
+        + buf.as_str();
+    std::fs::write("src/bind/ntoskrnl.rs", buf).expect("Fail to write converted bindings!");
 
     //cc::Build::new()
     //    .flag("/kernel")

@@ -1,5 +1,7 @@
 #![no_std]
 
+mod bind;
+
 pub mod base;
 
 #[cfg(feature = "ntoskrnl")]
