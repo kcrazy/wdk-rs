@@ -1,4 +1,5 @@
 use core::fmt::{Arguments, Write};
+use wdk_sys::base::ANSI_STRING;
 use wdk_sys::ntoskrnl::DbgPrint;
 
 #[macro_export]
@@ -16,7 +17,12 @@ struct Adaptor {}
 
 impl Write for Adaptor {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        unsafe { DbgPrint(s.as_ptr() as _) };
+        let ansi_str = ANSI_STRING {
+            Length: s.len() as u16,
+            MaximumLength: s.len() as u16,
+            Buffer: s.as_ptr() as _,
+        };
+        unsafe { DbgPrint("%Z\0".as_ptr() as _, &ansi_str) };
         Ok(())
     }
 }
