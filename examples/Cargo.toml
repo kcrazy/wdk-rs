@@ -8,7 +8,6 @@ edition = "2021"
 [[example]]
 name = "hello-world"
 path = "examples/hello-world.rs"
-crate-type = ["cdylib"]
 
 
 [dependencies]
