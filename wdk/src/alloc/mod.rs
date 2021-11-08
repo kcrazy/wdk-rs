@@ -1,4 +1,4 @@
 mod pool;
 
-pub use boxed::Box;
-pub use boxed::POOL_TYPE;
+pub use pool::Pool;
+pub use pool::POOL_TYPE;

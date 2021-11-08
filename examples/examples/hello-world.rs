@@ -8,6 +8,7 @@ use wdk_sys::base::{DRIVER_OBJECT, NTSTATUS, STATUS_SUCCESS, UNICODE_STRING};
 extern "system" fn driver_entry(driver: &mut DRIVER_OBJECT, _: &UNICODE_STRING) -> NTSTATUS {
     driver.DriverUnload = Some(driver_exit);
     println!("Hello World!");
+    println!("UTF16 {:?}", "Utf16 Hello World".encode_utf16());
     STATUS_SUCCESS
 }
 

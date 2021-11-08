@@ -2,7 +2,7 @@ use core::alloc::Layout;
 use core::ops::{Deref, DerefMut};
 use core::ptr::NonNull;
 
-pub use wdk_sys::base::_POOL_TYPE as POOL_TYPE;
+pub use wdk_sys::base::POOL_TYPE;
 use wdk_sys::ntoskrnl::{ExAllocatePoolWithTag, ExFreePoolWithTag};
 
 pub struct Pool<T> {
@@ -20,7 +20,7 @@ impl<T> Pool<T> {
             } else {
                 let mut ptr = NonNull::<T>::new(ptr as *mut T).unwrap();
                 *(ptr.as_mut()) = data;
-                Some(Box { tag, data: ptr })
+                Some(Pool { tag, data: ptr })
             }
         }
     }

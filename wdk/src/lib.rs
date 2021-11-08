@@ -7,8 +7,8 @@ pub mod version;
 
 use core::panic::PanicInfo;
 
-use wdk_sys::ntoskrnl::KeBugCheck;
 use wdk_sys::base::STATUS_ACCESS_VIOLATION;
+use wdk_sys::ntoskrnl::KeBugCheck;
 
 /// This function is called on panic.
 #[panic_handler]
