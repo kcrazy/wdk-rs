@@ -1,5 +1,4 @@
 use core::fmt::{Arguments, Write};
-use wdk_sys::base::ANSI_STRING;
 use wdk_sys::ntoskrnl::DbgPrint;
 
 #[macro_export]
@@ -15,14 +14,26 @@ macro_rules! println {
 
 struct Adaptor {}
 
+const DBG_BUFFER_LEN: usize = 4096;
+static mut DBG_BUFFER: [u16; DBG_BUFFER_LEN] = [0; DBG_BUFFER_LEN];
+
 impl Write for Adaptor {
     fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        let ansi_str = ANSI_STRING {
-            Length: s.len() as u16,
-            MaximumLength: s.len() as u16,
-            Buffer: s.as_ptr() as _,
+        let utf16 = s.encode_utf16();
+
+        unsafe {
+            let mut n = 0;
+            for str in utf16 {
+                if n < DBG_BUFFER_LEN - 1 {
+                    DBG_BUFFER[n] = str;
+                    n += 1;
+                }
+            }
+
+            DBG_BUFFER[n] = 0;
+
+            DbgPrint("%ws\0".as_ptr() as _, &DBG_BUFFER);
         };
-        unsafe { DbgPrint("%Z\0".as_ptr() as _, &ansi_str) };
         Ok(())
     }
 }
