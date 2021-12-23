@@ -1,11 +1,13 @@
 #![no_std]
+#![feature(alloc_error_handler)]
 
-pub mod alloc;
+extern crate alloc;
+
 pub mod dbg;
 pub mod error;
 pub mod version;
 pub mod string;
-
+mod allocator;
 
 
 use core::panic::PanicInfo;
