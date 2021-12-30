@@ -1,3 +1,4 @@
+use fallible_collections::TryReserveError;
 use wdk_sys::base::NTSTATUS;
 use wdk_sys::base::{
     STATUS_SUCCESS,
@@ -37,36 +38,36 @@ use wdk_sys::base::{
 pub struct Error(NTSTATUS);
 
 impl Error {
-    pub const GUARD_PAGE_VIOLATION:     Error = Error(STATUS_GUARD_PAGE_VIOLATION);
-    pub const DATATYPE_MISALIGNMENT:    Error = Error(STATUS_DATATYPE_MISALIGNMENT);
-    pub const BREAKPOINT:               Error = Error(STATUS_BREAKPOINT);
-    pub const SINGLE_STEP:              Error = Error(STATUS_SINGLE_STEP);
-    pub const UNWIND_CONSOLIDATE:       Error = Error(STATUS_UNWIND_CONSOLIDATE);
-    pub const UNSUCCESSFUL:             Error = Error(STATUS_UNSUCCESSFUL);
-    pub const NOT_IMPLEMENTED:          Error = Error(STATUS_NOT_IMPLEMENTED);
-    pub const ACCESS_VIOLATION:         Error = Error(STATUS_ACCESS_VIOLATION);
-    pub const IN_PAGE_ERROR:            Error = Error(STATUS_IN_PAGE_ERROR);
-    pub const INVALID_HANDLE:           Error = Error(STATUS_INVALID_HANDLE);
-    pub const INVALID_PARAMETER:        Error = Error(STATUS_INVALID_PARAMETER);
-    pub const END_OF_FILE:              Error = Error(STATUS_END_OF_FILE);
-    pub const NO_MEMORY:                Error = Error(STATUS_NO_MEMORY);
-    pub const ILLEGAL_INSTRUCTION:      Error = Error(STATUS_ILLEGAL_INSTRUCTION);
+    pub const GUARD_PAGE_VIOLATION: Error = Error(STATUS_GUARD_PAGE_VIOLATION);
+    pub const DATATYPE_MISALIGNMENT: Error = Error(STATUS_DATATYPE_MISALIGNMENT);
+    pub const BREAKPOINT: Error = Error(STATUS_BREAKPOINT);
+    pub const SINGLE_STEP: Error = Error(STATUS_SINGLE_STEP);
+    pub const UNWIND_CONSOLIDATE: Error = Error(STATUS_UNWIND_CONSOLIDATE);
+    pub const UNSUCCESSFUL: Error = Error(STATUS_UNSUCCESSFUL);
+    pub const NOT_IMPLEMENTED: Error = Error(STATUS_NOT_IMPLEMENTED);
+    pub const ACCESS_VIOLATION: Error = Error(STATUS_ACCESS_VIOLATION);
+    pub const IN_PAGE_ERROR: Error = Error(STATUS_IN_PAGE_ERROR);
+    pub const INVALID_HANDLE: Error = Error(STATUS_INVALID_HANDLE);
+    pub const INVALID_PARAMETER: Error = Error(STATUS_INVALID_PARAMETER);
+    pub const END_OF_FILE: Error = Error(STATUS_END_OF_FILE);
+    pub const NO_MEMORY: Error = Error(STATUS_NO_MEMORY);
+    pub const ILLEGAL_INSTRUCTION: Error = Error(STATUS_ILLEGAL_INSTRUCTION);
     pub const NONCONTINUABLE_EXCEPTION: Error = Error(STATUS_NONCONTINUABLE_EXCEPTION);
-    pub const INVALID_DISPOSITION:      Error = Error(STATUS_INVALID_DISPOSITION);
-    pub const ARRAY_BOUNDS_EXCEEDED:    Error = Error(STATUS_ARRAY_BOUNDS_EXCEEDED);
-    pub const FLOAT_DENORMAL_OPERAND:   Error = Error(STATUS_FLOAT_DENORMAL_OPERAND);
-    pub const FLOAT_DIVIDE_BY_ZERO:     Error = Error(STATUS_FLOAT_DIVIDE_BY_ZERO);
-    pub const FLOAT_INEXACT_RESULT:     Error = Error(STATUS_FLOAT_INEXACT_RESULT);
-    pub const FLOAT_INVALID_OPERATION:  Error = Error(STATUS_FLOAT_INVALID_OPERATION);
-    pub const FLOAT_OVERFLOW:           Error = Error(STATUS_FLOAT_OVERFLOW);
-    pub const FLOAT_STACK_CHECK:        Error = Error(STATUS_FLOAT_STACK_CHECK);
-    pub const FLOAT_UNDERFLOW:          Error = Error(STATUS_FLOAT_UNDERFLOW);
-    pub const INTEGER_DIVIDE_BY_ZERO:   Error = Error(STATUS_INTEGER_DIVIDE_BY_ZERO);
-    pub const INTEGER_OVERFLOW:         Error = Error(STATUS_INTEGER_OVERFLOW);
-    pub const PRIVILEGED_INSTRUCTION:   Error = Error(STATUS_PRIVILEGED_INSTRUCTION);
-    pub const INSUFFICIENT_RESOURCES:   Error = Error(STATUS_INSUFFICIENT_RESOURCES);
-    pub const INVALID_USER_BUFFER:      Error = Error(STATUS_INVALID_USER_BUFFER);
-    pub const STACK_OVERFLOW:           Error = Error(STATUS_STACK_OVERFLOW);
+    pub const INVALID_DISPOSITION: Error = Error(STATUS_INVALID_DISPOSITION);
+    pub const ARRAY_BOUNDS_EXCEEDED: Error = Error(STATUS_ARRAY_BOUNDS_EXCEEDED);
+    pub const FLOAT_DENORMAL_OPERAND: Error = Error(STATUS_FLOAT_DENORMAL_OPERAND);
+    pub const FLOAT_DIVIDE_BY_ZERO: Error = Error(STATUS_FLOAT_DIVIDE_BY_ZERO);
+    pub const FLOAT_INEXACT_RESULT: Error = Error(STATUS_FLOAT_INEXACT_RESULT);
+    pub const FLOAT_INVALID_OPERATION: Error = Error(STATUS_FLOAT_INVALID_OPERATION);
+    pub const FLOAT_OVERFLOW: Error = Error(STATUS_FLOAT_OVERFLOW);
+    pub const FLOAT_STACK_CHECK: Error = Error(STATUS_FLOAT_STACK_CHECK);
+    pub const FLOAT_UNDERFLOW: Error = Error(STATUS_FLOAT_UNDERFLOW);
+    pub const INTEGER_DIVIDE_BY_ZERO: Error = Error(STATUS_INTEGER_DIVIDE_BY_ZERO);
+    pub const INTEGER_OVERFLOW: Error = Error(STATUS_INTEGER_OVERFLOW);
+    pub const PRIVILEGED_INSTRUCTION: Error = Error(STATUS_PRIVILEGED_INSTRUCTION);
+    pub const INSUFFICIENT_RESOURCES: Error = Error(STATUS_INSUFFICIENT_RESOURCES);
+    pub const INVALID_USER_BUFFER: Error = Error(STATUS_INVALID_USER_BUFFER);
+    pub const STACK_OVERFLOW: Error = Error(STATUS_STACK_OVERFLOW);
 
     pub fn from_ntstatus(status: NTSTATUS) -> Error {
         Error(status)
@@ -87,5 +88,11 @@ impl IntoResult for NTSTATUS {
             STATUS_SUCCESS => Ok(()),
             status => Err(Error::from_ntstatus(status)),
         }
+    }
+}
+
+impl From<TryReserveError> for Error {
+    fn from(_: TryReserveError) -> Error {
+        Error(STATUS_INSUFFICIENT_RESOURCES)
     }
 }

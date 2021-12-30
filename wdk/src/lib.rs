@@ -3,12 +3,12 @@
 
 extern crate alloc;
 
+mod allocator;
+
 pub mod dbg;
 pub mod error;
 pub mod version;
 pub mod string;
-mod allocator;
-
 
 use core::panic::PanicInfo;
 
