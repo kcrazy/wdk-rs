@@ -1,10 +1,8 @@
-use core::fmt::{Arguments, Write};
-use core::mem::size_of;
+use core::fmt::{self, Arguments, Write};
 
-use alloc::vec::Vec;
-
-use wdk_sys::base::UNICODE_STRING;
 use wdk_sys::ntoskrnl::DbgPrint;
+
+use crate::string::UnicodeString;
 
 #[macro_export]
 macro_rules! print {
@@ -20,17 +18,10 @@ macro_rules! println {
 struct Adaptor {}
 
 impl Write for Adaptor {
-    fn write_str(&mut self, s: &str) -> core::fmt::Result {
-        let utf16: Vec<u16> = s.encode_utf16().collect();
-
-        let s = UNICODE_STRING {
-            Length: (utf16.len() * size_of::<u16>()) as u16,
-            MaximumLength: (utf16.len() * size_of::<u16>()) as u16,
-            Buffer: utf16.as_ptr() as _,
-        };
-
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        let us = UnicodeString::from_str(s).map_err(|_err| fmt::Error)?;
         unsafe {
-            DbgPrint("%wZ\0".as_ptr() as _, &s);
+            DbgPrint("%wZ\0".as_ptr() as _, &us.to_unicode_string());
         };
         Ok(())
     }
