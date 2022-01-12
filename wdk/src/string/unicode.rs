@@ -3,7 +3,8 @@ use alloc::vec::Vec;
 use core::char::{decode_utf16, REPLACEMENT_CHARACTER};
 use core::fmt;
 use core::mem::size_of;
-use fallible_collections::FallibleVec;
+
+use fallible_collections::{FallibleVec, TryCollect};
 
 use wdk_sys::base::UNICODE_STRING;
 
@@ -37,8 +38,7 @@ impl UnicodeString {
     }
 
     pub fn from_str(s: &str) -> Result<Self, Error> {
-        //FIXME: OOM
-        let utf16: Vec<u16> = s.encode_utf16().collect();
+        let utf16: Vec<u16> = s.encode_utf16().try_collect()?;
 
         Ok(UnicodeString { buffer: utf16 })
     }
