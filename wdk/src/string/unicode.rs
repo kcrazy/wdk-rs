@@ -1,7 +1,7 @@
-use alloc::string::String;
 use alloc::vec::Vec;
 use core::char::{decode_utf16, REPLACEMENT_CHARACTER};
 use core::fmt;
+use core::fmt::Write;
 use core::mem::size_of;
 
 use fallible_collections::{FallibleVec, TryCollect};
@@ -60,11 +60,16 @@ impl UnicodeString {
 
 impl fmt::Display for UnicodeString {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        //FIXME: OOM
-        let s: String = decode_utf16(self.buffer.iter().cloned())
+        //FIXME: OOM?
+        let s = decode_utf16(self.buffer.iter().cloned())
             .map(|r| r.unwrap_or(REPLACEMENT_CHARACTER))
-            .collect();
+            .try_collect::<Vec<_>>()
+            .map_err(|_e| fmt::Error)?;
 
-        f.write_str(s.as_str())
+        for c in s {
+            f.write_char(c)?;
+        }
+
+        Ok(())
     }
 }
