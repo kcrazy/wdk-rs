@@ -7,14 +7,14 @@ mod allocator;
 
 pub mod dbg;
 pub mod error;
-pub mod version;
 pub mod string;
+pub mod user_ptr;
+pub mod version;
 
 use core::panic::PanicInfo;
 
 use wdk_sys::base::STATUS_ACCESS_VIOLATION;
 use wdk_sys::ntoskrnl::KeBugCheck;
-
 
 /// This function is called on panic.
 #[panic_handler]
