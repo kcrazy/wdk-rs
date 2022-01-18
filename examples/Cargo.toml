@@ -9,6 +9,10 @@ edition = "2021"
 name = "hello-world"
 path = "examples/hello-world.rs"
 
+[[example]]
+name = "memory"
+path = "examples/memory.rs"
+
 
 [dependencies]
 wdk = { path = "../wdk" }

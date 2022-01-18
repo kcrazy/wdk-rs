@@ -19,7 +19,8 @@ fn alloc_error(_: Layout) -> ! {
 }
 
 #[global_allocator]
-static ALLOCATOR: KernelAllocator = KernelAllocator::new(u32::from_ne_bytes(*b"rust"));
+static ALLOCATOR: KernelAllocator =
+    KernelAllocator::new(u32::from_ne_bytes(*b"rust"), POOL_TYPE::PagedPool);
 
 lazy_static! {
     /// The version of Microsoft Windows that is currently running. This is used by
@@ -36,13 +37,14 @@ pub struct KernelAllocator {
     /// The 32-bit tag to use for the pool, this is usually derived from a quadruplet of ASCII
     /// bytes, e.g. by invoking `u32::from_ne_bytes(*b"rust")`.
     tag: u32,
+    pool_type: i32,
 }
 
 impl KernelAllocator {
     /// Sets up a new kernel allocator with the 32-bit tag specified. The tag is usually derived
     /// from a quadruplet of ASCII bytes, e.g. by invoking `u32::from_ne_bytes(*b"rust")`.
-    pub const fn new(tag: u32) -> Self {
-        Self { tag }
+    pub const fn new(tag: u32, pool_type: i32) -> Self {
+        Self { tag, pool_type }
     }
 }
 
@@ -56,12 +58,12 @@ unsafe impl GlobalAlloc for KernelAllocator {
         let ptr = if use_ex_allocate_pool2 {
             ExAllocatePoolWithTag(
                 // FIXME: ExAllocatePool2(
-                POOL_TYPE::PagedPool as _,
+                self.pool_type as _,
                 layout.size() as _,
                 self.tag,
             )
         } else {
-            ExAllocatePoolWithTag(POOL_TYPE::PagedPool, layout.size() as _, self.tag)
+            ExAllocatePoolWithTag(self.pool_type, layout.size() as _, self.tag)
         };
 
         if ptr.is_null() {

@@ -3,8 +3,7 @@
 
 extern crate alloc;
 
-mod allocator;
-
+pub mod allocator;
 pub mod dbg;
 pub mod error;
 pub mod string;
