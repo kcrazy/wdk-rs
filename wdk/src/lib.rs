@@ -7,6 +7,7 @@ pub mod allocator;
 pub mod dbg;
 pub mod error;
 pub mod string;
+pub mod symbolic_link;
 pub mod user_ptr;
 pub mod version;
 
