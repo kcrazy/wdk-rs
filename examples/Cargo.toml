@@ -13,6 +13,10 @@ path = "examples/hello-world.rs"
 name = "memory"
 path = "examples/memory.rs"
 
+[[example]]
+name = "creating-devices"
+path = "examples/creating-devices.rs"
+
 
 [dependencies]
 wdk = { path = "../wdk" }

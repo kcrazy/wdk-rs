@@ -1,13 +1,19 @@
+use alloc::boxed::Box;
+use core::mem::size_of;
+use core::ptr::null_mut;
+use fallible_collections::FallibleBox;
 
-
-use wdk_sys::base::_POOL_TYPE::NonPagedPool;
-use wdk_sys::base::DRIVER_OBJECT;
+use wdk_sys::base::{DRIVER_OBJECT, UNICODE_STRING};
 use wdk_sys::ntoskrnl::IoCreateDevice;
 
-use crate::error::Error;
+use crate::device::{
+    Access, Device, DeviceDoFlags, DeviceExtension, DeviceFlags, DeviceOperations,
+    DeviceOperationsVtable, DeviceType,
+};
+use crate::error::{Error, IntoResult};
 
 pub struct Driver {
-    pub(crate) raw: *mut DRIVER_OBJECT,
+    pub raw: *mut DRIVER_OBJECT,
 }
 
 impl Driver {
@@ -25,7 +31,7 @@ impl Driver {
 
     pub fn create_device<T>(
         &mut self,
-        name: &str,
+        name: &mut UNICODE_STRING,
         device_type: DeviceType,
         device_flags: DeviceFlags,
         device_do_flags: DeviceDoFlags,
@@ -36,20 +42,16 @@ impl Driver {
         T: DeviceOperations,
     {
         // Box the data.
-        let data = Pool<NonPagedPool>::new(data);
-
-        // Convert the name to UTF-16 and then create a UNICODE_STRING.
-        let name = U16CString::from_str(name).unwrap();
-        let mut name = create_unicode_string(name.as_slice());
+        let data = <Box<_> as FallibleBox<_>>::try_new(data)?;
 
         // Create the device.
-        let mut device = core::ptr::null_mut();
+        let mut device = null_mut();
 
         unsafe {
             IoCreateDevice(
                 self.raw,
-                core::mem::size_of::<DeviceExtension>() as u32,
-                &mut name,
+                size_of::<DeviceExtension>() as u32,
+                name,
                 device_type.into(),
                 device_flags.bits(),
                 access.is_exclusive() as _,

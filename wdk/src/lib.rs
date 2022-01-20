@@ -5,7 +5,11 @@ extern crate alloc;
 
 pub mod allocator;
 pub mod dbg;
+pub mod device;
+pub mod driver;
 pub mod error;
+pub mod ioctl;
+pub mod request;
 pub mod string;
 pub mod symbolic_link;
 pub mod user_ptr;

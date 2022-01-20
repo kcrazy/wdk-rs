@@ -52,11 +52,11 @@ fn generate_ntoskrnl() {
         + buf.as_str();
     std::fs::write("src/bind/ntoskrnl.rs", buf).expect("Fail to write converted bindings!");
 
-    //cc::Build::new()
-    //    .flag("/kernel")
-    //    .include(include_dir)
-    //    .file("src/wrapper.c")
-    //    .compile("wrapper_ntoskrnl");
+    cc::Build::new()
+        .flag("/kernel")
+        .include(include_dir)
+        .file("wrapper/wrapper.c")
+        .compile("wrapper_ntoskrnl");
 }
 
 fn main() {
