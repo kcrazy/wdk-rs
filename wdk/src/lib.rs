@@ -12,6 +12,7 @@ pub mod ioctl;
 pub mod request;
 pub mod string;
 pub mod symbolic_link;
+pub mod sync;
 pub mod user_ptr;
 pub mod version;
 
