@@ -1,11 +1,11 @@
 #include "wrapper.h"
 
 
-void _ExInitializeFastMutex(
-        PFAST_MUTEX fast_mutex
-) {
-    ExInitializeFastMutex(fast_mutex);
-}
+//void _ExInitializeFastMutex(
+//        PFAST_MUTEX fast_mutex
+//) {
+//    ExInitializeFastMutex(fast_mutex);
+//}
 
 void _ExAcquirePushLockExclusive(
         PEX_PUSH_LOCK push_lock
@@ -65,9 +65,9 @@ ULONG _MmGetMdlByteOffset(PMDL mdl) {
     return MmGetMdlByteOffset(mdl);
 }
 
-PVOID _MmGetSystemAddressForMdlSafe(PMDL mdl, ULONG priority) {
-    return MmGetSystemAddressForMdlSafe(mdl, priority);
-}
+//PVOID _MmGetSystemAddressForMdlSafe(PMDL mdl, ULONG priority) {
+//    return MmGetSystemAddressForMdlSafe(mdl, priority);
+//}
 
 void _ObDereferenceObject(PVOID p) {
     ObDereferenceObject(p);

@@ -14,7 +14,7 @@ impl<T> Pool<T> {
     pub fn new(data: T, type_: POOL_TYPE, tag: u32) -> Option<Self> {
         let layout = Layout::new::<T>();
         unsafe {
-            let ptr = ExAllocatePoolWithTag(type_, layout.size() as u64, tag);
+            let ptr = ExAllocatePoolWithTag(type_, layout.size() as _, tag);
             if ptr.is_null() {
                 None
             } else {

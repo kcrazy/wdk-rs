@@ -34,6 +34,10 @@ fn panic(_info: &PanicInfo) -> ! {
 #[no_mangle]
 static _fltused: i32 = 0;
 
+#[used]
+#[no_mangle]
+static __security_cookie: i32 = 88888888;
+
 #[cfg(target_arch = "x86_64")]
 #[no_mangle]
 extern "system" fn __CxxFrameHandler3() -> i32 {
@@ -41,7 +45,7 @@ extern "system" fn __CxxFrameHandler3() -> i32 {
 }
 
 #[cfg(target_arch = "x86")]
-#[link_name = "___CxxFrameHandler3@0"]
-pub extern "system" fn __cxx_frame_handler3_0() -> i32 {
+#[no_mangle]
+fn __CxxFrameHandler3() -> i32 {
     0
 }
