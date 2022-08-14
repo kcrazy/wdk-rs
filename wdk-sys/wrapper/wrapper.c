@@ -7,29 +7,29 @@
 //    ExInitializeFastMutex(fast_mutex);
 //}
 
-void _ExAcquirePushLockExclusive(
-        PEX_PUSH_LOCK push_lock
-) {
-    ExAcquirePushLockExclusive(push_lock);
-}
-
-void _ExReleasePushLockExclusive(
-        PEX_PUSH_LOCK push_lock
-) {
-    ExReleasePushLockExclusive(push_lock);
-}
-
-void _ExAcquirePushLockShared(
-        PEX_PUSH_LOCK push_lock
-) {
-    ExAcquirePushLockShared(push_lock);
-}
-
-void _ExReleasePushLockShared(
-        PEX_PUSH_LOCK push_lock
-) {
-    ExReleasePushLockShared(push_lock);
-}
+//void _ExAcquirePushLockExclusive(
+//        PEX_PUSH_LOCK push_lock
+//) {
+//    ExAcquirePushLockExclusive(push_lock);
+//}
+//
+//void _ExReleasePushLockExclusive(
+//        PEX_PUSH_LOCK push_lock
+//) {
+//    ExReleasePushLockExclusive(push_lock);
+//}
+//
+//void _ExAcquirePushLockShared(
+//        PEX_PUSH_LOCK push_lock
+//) {
+//    ExAcquirePushLockShared(push_lock);
+//}
+//
+//void _ExReleasePushLockShared(
+//        PEX_PUSH_LOCK push_lock
+//) {
+//    ExReleasePushLockShared(push_lock);
+//}
 
 PIO_STACK_LOCATION _IoGetCurrentIrpStackLocation(PIRP irp) {
     return IoGetCurrentIrpStackLocation(irp);

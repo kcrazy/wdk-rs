@@ -15,6 +15,7 @@ pub mod symbolic_link;
 pub mod sync;
 pub mod user_ptr;
 pub mod version;
+pub mod reg;
 
 use core::panic::PanicInfo;
 

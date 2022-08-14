@@ -403,7 +403,7 @@ extern "C" fn release_callback<T: DeviceOperations>(device: *mut DEVICE_OBJECT) 
         let extension = (*device).DeviceExtension as *mut DeviceExtension;
 
         let ptr = core::mem::replace(&mut (*extension).data, null_mut());
-        Box::from_raw(ptr as *mut T);
+        let _ = Box::from_raw(ptr as *mut T);
     }
 }
 
