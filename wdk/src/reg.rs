@@ -1,4 +1,4 @@
-use crate::error::{Error, IntoResult};
+use crate::error::Error;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::mem;
@@ -87,7 +87,7 @@ impl RegKey {
             }
 
             let value = match (*kvpi).Type {
-                REG_DWORD => RegValue::REG_DWORD(*((*kvpi).Data.as_ptr() as *const u32)),
+                REG_DWORD => RegValue::RegDword(*((*kvpi).Data.as_ptr() as *const u32)),
                 REG_MULTI_SZ => {
                     let mut words = slice::from_raw_parts(
                         (*kvpi).Data.as_ptr() as *const u16,
@@ -102,7 +102,7 @@ impl RegKey {
                         v.push(UnicodeString::from_utf16(w)?);
                     }
 
-                    RegValue::REG_MULTI_SZ(v)
+                    RegValue::RegMultiSz(v)
                 }
                 _ => todo!(),
             };
@@ -113,7 +113,7 @@ impl RegKey {
 }
 
 pub enum RegValue {
-    REG_DWORD(u32),
-    REG_SZ(UnicodeString),
-    REG_MULTI_SZ(Vec<UnicodeString>),
+    RegDword(u32),
+    RegSz(UnicodeString),
+    RegMultiSz(Vec<UnicodeString>),
 }

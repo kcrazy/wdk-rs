@@ -60,4 +60,14 @@ typedef union _KIDTENTRY64
     unsigned __int64 Alignment;
 } KIDTENTRY64, *PKIDTENTRY64;
 
+typedef struct _SERVICE_DESCRIPTOR_TABLE {
+    PULONG Base;
+    PULONG Count;
+    ULONG Limit;
+    PUCHAR Number;
+} SERVICE_DESCRIPTOR_TABLE, *PSERVICE_DESCRIPTOR_TABLE;
+
+extern PSERVICE_DESCRIPTOR_TABLE KeServiceDescriptorTable;
+extern USHORT *NtBuildNumber;
+
 #include "ntifs.h"

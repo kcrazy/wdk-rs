@@ -9,13 +9,13 @@ pub mod device;
 pub mod driver;
 pub mod error;
 pub mod ioctl;
+pub mod reg;
 pub mod request;
 pub mod string;
 pub mod symbolic_link;
 pub mod sync;
 pub mod user_ptr;
 pub mod version;
-pub mod reg;
 
 use core::panic::PanicInfo;
 
@@ -46,6 +46,7 @@ extern "system" fn __CxxFrameHandler3() -> i32 {
 }
 
 #[cfg(target_arch = "x86")]
+#[allow(non_snake_case)]
 #[no_mangle]
 fn __CxxFrameHandler3() -> i32 {
     0
