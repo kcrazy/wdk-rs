@@ -7,9 +7,9 @@ use core::slice;
 
 use crate::string::UnicodeString;
 use wdk_sys::base::{
-    HANDLE, KEY_VALUE_PARTIAL_INFORMATION, OBJECT_ATTRIBUTES, REG_DWORD, REG_MULTI_SZ,
-    STATUS_BUFFER_OVERFLOW, STATUS_INSUFFICIENT_RESOURCES, UNICODE_STRING,
-    _KEY_VALUE_INFORMATION_CLASS, _POOL_TYPE,
+    HANDLE, KEY_VALUE_PARTIAL_INFORMATION, OBJECT_ATTRIBUTES, OBJ_CASE_INSENSITIVE,
+    OBJ_KERNEL_HANDLE, REG_DWORD, REG_MULTI_SZ, STATUS_BUFFER_OVERFLOW,
+    STATUS_INSUFFICIENT_RESOURCES, UNICODE_STRING, _KEY_VALUE_INFORMATION_CLASS, _POOL_TYPE,
 };
 use wdk_sys::ntoskrnl::{
     ExAllocatePoolWithTag, ExFreePoolWithTag, ZwClose, ZwOpenKey, ZwQueryValueKey,
@@ -38,7 +38,7 @@ impl RegKey {
                 Length: mem::size_of::<OBJECT_ATTRIBUTES>() as _,
                 RootDirectory: null_mut(),
                 ObjectName: &mut us,
-                Attributes: 0,
+                Attributes: OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE,
                 SecurityDescriptor: null_mut(),
                 SecurityQualityOfService: null_mut(),
             };
