@@ -8,7 +8,7 @@ use core::slice;
 use crate::string::UnicodeString;
 use wdk_sys::base::{
     HANDLE, KEY_VALUE_PARTIAL_INFORMATION, OBJECT_ATTRIBUTES, OBJ_CASE_INSENSITIVE,
-    OBJ_KERNEL_HANDLE, REG_DWORD, REG_MULTI_SZ, STATUS_BUFFER_OVERFLOW,
+    OBJ_KERNEL_HANDLE, REG_DWORD, REG_SZ, REG_MULTI_SZ, STATUS_BUFFER_OVERFLOW,
     STATUS_INSUFFICIENT_RESOURCES, UNICODE_STRING, _KEY_VALUE_INFORMATION_CLASS, _POOL_TYPE,
 };
 use wdk_sys::ntoskrnl::{
@@ -88,6 +88,15 @@ impl RegKey {
 
             let value = match (*kvpi).Type {
                 REG_DWORD => RegValue::RegDword(*((*kvpi).Data.as_ptr() as *const u32)),
+                REG_SZ => {
+                    let mut words = slice::from_raw_parts(
+                        (*kvpi).Data.as_ptr() as *const u16,
+                        ((*kvpi).DataLength / 2) as _,
+                    );
+
+                    let us = UnicodeString::from_utf16(words)?;
+                    RegValue::RegSz(us)
+                },
                 REG_MULTI_SZ => {
                     let mut words = slice::from_raw_parts(
                         (*kvpi).Data.as_ptr() as *const u16,
