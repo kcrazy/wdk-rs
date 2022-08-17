@@ -7,7 +7,7 @@ use core::slice;
 
 use fallible_collections::{FallibleVec, TryCollect};
 
-use wdk_sys::base::{UNICODE_STRING, _UNICODE_STRING};
+use wdk_sys::base::UNICODE_STRING;
 
 use crate::error::Error;
 use crate::string::ansi::AnsiString;
