@@ -3,10 +3,11 @@ use core::char::{decode_utf16, REPLACEMENT_CHARACTER};
 use core::fmt;
 use core::fmt::Write;
 use core::mem::size_of;
+use core::slice;
 
 use fallible_collections::{FallibleVec, TryCollect};
 
-use wdk_sys::base::UNICODE_STRING;
+use wdk_sys::base::{UNICODE_STRING, _UNICODE_STRING};
 
 use crate::error::Error;
 use crate::string::ansi::AnsiString;
@@ -33,6 +34,16 @@ impl UnicodeString {
     pub fn from_utf16(utf16: &[u16]) -> Result<Self, Error> {
         let mut vec = Vec::try_with_capacity(utf16.len())?;
         vec.extend_from_slice(utf16);
+
+        Ok(UnicodeString { buffer: vec })
+    }
+
+    pub fn from_unicode_string(us: &UNICODE_STRING) -> Result<Self, Error> {
+        let mut vec = Vec::try_with_capacity((us.Length / 2) as _)?;
+
+        let words = unsafe { slice::from_raw_parts(us.Buffer as *const u16, (us.Length / 2) as _) };
+
+        vec.extend_from_slice(words);
 
         Ok(UnicodeString { buffer: vec })
     }
