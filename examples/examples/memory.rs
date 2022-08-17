@@ -32,4 +32,4 @@ extern "system" fn driver_entry(driver: &mut DRIVER_OBJECT, _: &UNICODE_STRING) 
     STATUS_SUCCESS
 }
 
-extern "C" fn driver_exit(_driver: *mut DRIVER_OBJECT) {}
+extern "stdcall" fn driver_exit(_driver: *mut DRIVER_OBJECT) {}
