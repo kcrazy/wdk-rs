@@ -1,21 +1,8 @@
 #![no_std]
-#![feature(alloc_error_handler)]
-
-extern crate alloc;
 
 pub mod allocator;
-pub mod dbg;
-pub mod device;
-pub mod driver;
 pub mod error;
-pub mod ioctl;
-pub mod reg;
-pub mod request;
 pub mod string;
-pub mod symbolic_link;
-pub mod sync;
-pub mod user_ptr;
-pub mod version;
 
 use core::panic::PanicInfo;
 
