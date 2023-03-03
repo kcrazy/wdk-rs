@@ -1,14 +1,9 @@
-use core::char::{decode_utf16, REPLACEMENT_CHARACTER};
-use core::fmt;
-use core::fmt::Write;
 use core::mem::size_of;
 use core::slice;
 
-use fallible_collections::{FallibleVec, TryCollect};
-
 use wdk_sys::base::UNICODE_STRING;
 
-use crate::allocator::Vec;
+use crate::allocator::vec::{TryCollect, Vec};
 use crate::allocator::POOL_TYPE;
 use crate::error::Error;
 use crate::string::ansi::AnsiString;
@@ -48,20 +43,20 @@ impl UnicodeString {
 
         let words = unsafe { slice::from_raw_parts(us.Buffer as *const u16, (us.Length / 2) as _) };
 
-        vec.extend_from_slice(words);
+        vec.extend_from_slice(words)?;
 
         Ok(UnicodeString { buffer: vec })
     }
 
-    // pub fn from_str(s: &str) -> Result<Self, Error> {
-    //     let utf16: Vec<u16> = s.encode_utf16().try_collect()?;
-    //
-    //     Ok(UnicodeString { buffer: utf16 })
-    // }
+    pub fn from_str(s: &str, pool_type: POOL_TYPE, tag: u32) -> Result<Self, Error> {
+        let utf16: Vec<u16> = s.encode_utf16().try_collect(pool_type, tag)?;
 
-    // pub fn to_ansi(&self) -> Result<AnsiString, Error> {
-    //     AnsiString::from_utf16(&self.buffer.as_slice())
-    // }
+        Ok(UnicodeString { buffer: utf16 })
+    }
+
+    pub fn to_ansi(&self, pool_type: POOL_TYPE, tag: u32) -> Result<AnsiString, Error> {
+        AnsiString::from_utf16(&self.buffer.as_slice(), pool_type, tag)
+    }
 
     pub fn to_unicode_string(&self) -> UNICODE_STRING {
         let length = (self.buffer.len() * size_of::<u16>()) as u16;

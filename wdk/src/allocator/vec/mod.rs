@@ -1,7 +1,8 @@
 mod deref;
+mod drop;
+mod from_iterator;
 mod helpers;
 
-use core::alloc::Layout;
 use core::marker::PhantomData;
 use core::ptr::NonNull;
 
@@ -12,6 +13,8 @@ use crate::allocator::POOL_TYPE;
 use crate::error::Error;
 
 use helpers::*;
+
+pub use from_iterator::TryCollect;
 
 #[repr(transparent)]
 pub struct Vec<T> {
@@ -189,7 +192,6 @@ impl<T> Vec<T> {
         let len = self.len();
 
         let new_buf = {
-            let old_layout = make_layout::<T>(old_capacity);
             unsafe {
                 ExAllocatePoolWithTag(
                     self.header().pool_type,

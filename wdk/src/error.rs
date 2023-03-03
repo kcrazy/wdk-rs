@@ -1,4 +1,3 @@
-use fallible_collections::TryReserveError;
 use wdk_sys::base::NTSTATUS;
 use wdk_sys::base::{
     STATUS_ACCESS_VIOLATION, STATUS_ARRAY_BOUNDS_EXCEEDED, STATUS_BREAKPOINT,
@@ -66,15 +65,6 @@ impl IntoResult for NTSTATUS {
         match self {
             STATUS_SUCCESS => Ok(()),
             status => Err(Error::from_ntstatus(status)),
-        }
-    }
-}
-
-impl From<TryReserveError> for Error {
-    fn from(err: TryReserveError) -> Error {
-        match err {
-            TryReserveError::CapacityOverflow => Error(STATUS_STACK_OVERFLOW),
-            TryReserveError::AllocError { .. } => Error(STATUS_INSUFFICIENT_RESOURCES),
         }
     }
 }
