@@ -15,7 +15,6 @@ fn panic(_info: &PanicInfo) -> ! {
     unsafe {
         KeBugCheck(STATUS_ACCESS_VIOLATION as u32);
     }
-    loop {}
 }
 
 #[used]

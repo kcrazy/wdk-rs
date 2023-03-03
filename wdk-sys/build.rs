@@ -1,3 +1,4 @@
+use bindgen::Abi;
 use wdk_build::{get_km_dir, DirectoryType};
 
 fn generate_base() {
@@ -5,9 +6,10 @@ fn generate_base() {
 
     let include_dir = get_km_dir(DirectoryType::Include).unwrap();
 
-    bindgen::Builder::default()
+    let buf = bindgen::Builder::default()
         .header("wrapper/wrapper.h")
         .use_core()
+        .override_abi(Abi::Stdcall, r"\w*")
         .derive_debug(false)
         .layout_tests(false)
         .ctypes_prefix("cty")
@@ -17,8 +19,10 @@ fn generate_base() {
         .ignore_functions()
         .generate()
         .unwrap()
-        .write_to_file("src/bind/base.rs")
-        .unwrap();
+        .to_string();
+
+    let buf = buf.replace("extern \"C\"", "extern \"stdcall\"");
+    std::fs::write("src/bind/base.rs", buf).expect("Fail to write converted bindings!");
 }
 
 #[cfg(feature = "ntoskrnl")]
@@ -32,6 +36,13 @@ fn generate_ntoskrnl() {
     let buf = bindgen::Builder::default()
         .header("wrapper/wrapper.h")
         .use_core()
+        .override_abi(Abi::Stdcall, r"\w*")
+        .override_abi(Abi::C, "__va_start")
+        .override_abi(Abi::C, "DbgPrint")
+        .override_abi(Abi::C, "DbgPrintEx")
+        .override_abi(Abi::C, "DbgPrintReturnControlC")
+        .override_abi(Abi::C, "RtlInitializeSidEx")
+        .override_abi(Abi::C, r"^[a-z0-9_]+$")
         .derive_debug(false)
         .layout_tests(false)
         .ctypes_prefix("cty")

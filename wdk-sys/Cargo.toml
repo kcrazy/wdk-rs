@@ -9,7 +9,7 @@ edition = "2021"
 cty = "0.2"
 
 [build-dependencies]
-bindgen = "0.59"
+bindgen = "0.64"
 cc = "1.0"
 wdk-build = { path = "../wdk-build" }
 
