@@ -4,18 +4,6 @@ pub mod allocator;
 pub mod error;
 pub mod string;
 
-use core::panic::PanicInfo;
-
-use wdk_sys::base::STATUS_ACCESS_VIOLATION;
-use wdk_sys::ntoskrnl::KeBugCheck;
-
-/// This function is called on panic.
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    unsafe {
-        KeBugCheck(STATUS_ACCESS_VIOLATION as u32);
-    }
-}
 
 #[used]
 #[no_mangle]
