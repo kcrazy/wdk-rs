@@ -3,7 +3,10 @@ use core::ops::{Deref, DerefMut};
 use core::ptr::NonNull;
 
 pub use wdk_sys::base::POOL_TYPE;
+use wdk_sys::base::STATUS_INSUFFICIENT_RESOURCES;
 use wdk_sys::ntoskrnl::{ExAllocatePoolWithTag, ExFreePoolWithTag};
+
+use crate::error::Error;
 
 pub struct Pool<T: ?Sized> {
     tag: u32,
@@ -11,16 +14,16 @@ pub struct Pool<T: ?Sized> {
 }
 
 impl<T> Pool<T> {
-    pub fn new(data: T, type_: POOL_TYPE, tag: u32) -> Option<Self> {
+    pub fn new(data: T, pool_type: POOL_TYPE, tag: u32) -> Result<Self, Error> {
         let layout = Layout::new::<T>();
         unsafe {
-            let ptr = ExAllocatePoolWithTag(type_, layout.size() as _, tag);
+            let ptr = ExAllocatePoolWithTag(pool_type, layout.size() as _, tag);
             if ptr.is_null() {
-                None
+                Err(Error::from_ntstatus(STATUS_INSUFFICIENT_RESOURCES))
             } else {
                 let mut ptr = NonNull::<T>::new(ptr as *mut T).unwrap();
                 *(ptr.as_mut()) = data;
-                Some(Pool { tag, data: ptr })
+                Ok(Pool { tag, data: ptr })
             }
         }
     }

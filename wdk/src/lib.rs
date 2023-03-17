@@ -3,6 +3,7 @@
 pub mod allocator;
 pub mod error;
 pub mod string;
+pub mod sync;
 
 
 #[used]
