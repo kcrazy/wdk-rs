@@ -9,7 +9,7 @@ use wdk_sys::ntoskrnl::{ExAllocatePoolWithTag, ExFreePoolWithTag};
 
 use crate::error::Error;
 
-struct Rc<T> {
+pub struct Rc<T> {
     ptr: *mut RcNode<T>,
     _marker: PhantomData<RcNode<T>>,
 }
@@ -21,7 +21,7 @@ struct RcNode<T> {
 }
 
 impl<T> Rc<T> {
-    fn new(value: T, pool_type: POOL_TYPE, tag: u32) -> Result<Self, Error> {
+    pub fn new(value: T, pool_type: POOL_TYPE, tag: u32) -> Result<Self, Error> {
         let rc_node = RcNode {
             value,
             refcount: AtomicUsize::new(1),
@@ -44,7 +44,7 @@ impl<T> Rc<T> {
         }
     }
 
-    fn clone(&self) -> Self {
+    pub fn clone(&self) -> Self {
         let _old_refcount = unsafe { &(*self.ptr) }
             .refcount
             .fetch_add(1, Ordering::SeqCst);
