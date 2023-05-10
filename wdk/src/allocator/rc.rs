@@ -20,6 +20,9 @@ struct RcNode<T> {
     tag: u32,
 }
 
+unsafe impl<T> Send for Rc<T> {}
+unsafe impl<T> Sync for Rc<T> {}
+
 impl<T> Rc<T> {
     pub fn new(value: T, pool_type: POOL_TYPE, tag: u32) -> Result<Self, Error> {
         let rc_node = RcNode {
