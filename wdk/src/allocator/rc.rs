@@ -46,8 +46,10 @@ impl<T> Rc<T> {
             }
         }
     }
+}
 
-    pub fn clone(&self) -> Self {
+impl<T> Clone for Rc<T> {
+    fn clone(&self) -> Self {
         let _old_refcount = unsafe { &(*self.ptr) }
             .refcount
             .fetch_add(1, Ordering::SeqCst);
@@ -55,6 +57,12 @@ impl<T> Rc<T> {
             ptr: self.ptr,
             _marker: PhantomData,
         }
+    }
+}
+
+impl<T> PartialEq for Rc<T> {
+    fn eq(&self, other: &Rc<T>) -> bool {
+        self.ptr == other.ptr
     }
 }
 
