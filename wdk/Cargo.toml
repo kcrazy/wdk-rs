@@ -8,6 +8,7 @@ edition = "2021"
 [features]
 default = ["alloc"]
 alloc = []
+usermod = []
 
 [dependencies]
 wdk-sys = { path = "../wdk-sys" }

@@ -25,7 +25,19 @@ fn generate_base() {
     std::fs::write("src/bind/base.rs", buf).expect("Fail to write converted bindings!");
 }
 
+#[cfg(feature = "usermod")]
+fn generate_ntoskrnl() {
+    let include_dir = get_km_dir(DirectoryType::Include).unwrap();
+
+    cc::Build::new()
+        .flag("/kernel")
+        .include(include_dir)
+        .file("wrapper/wrapper.c")
+        .compile("wrapper_ntoskrnl");
+}
+
 #[cfg(feature = "ntoskrnl")]
+#[cfg(not(feature = "usermod"))]
 fn generate_ntoskrnl() {
     println!("cargo:rerun-if-changed=src/wrapper.h");
     println!("cargo:rerun-if-changed=src/wrapper.c");

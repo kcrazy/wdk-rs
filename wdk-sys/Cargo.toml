@@ -16,3 +16,4 @@ wdk-build = { path = "../wdk-build" }
 [features]
 default = ["ntoskrnl"]
 ntoskrnl = []
+usermod = []
